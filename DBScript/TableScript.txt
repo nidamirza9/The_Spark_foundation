@@ -1,0 +1,45 @@
+create table Customers
+(
+	CusId int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	CusName varchar(100),
+	Email varchar(150),
+	CurrentBalance int
+);
+insert into Customers(CusName, Email, CurrentBalance) values('Manali Gohel', 'manali@gmail.com', 10000);
+insert into Customers(CusName, Email, CurrentBalance) values('Neelam Shah', 'neelam@gmail.com', 15000);
+insert into Customers(CusName, Email, CurrentBalance) values('Dimple Shah', 'dimple@gmail.com', 16500);
+insert into Customers(CusName, Email, CurrentBalance) values('Jaimin Patel', 'jaimin@gmail.com', 11000);
+insert into Customers(CusName, Email, CurrentBalance) values('Akshit Patel', 'akshit@gmail.com', 15550);
+insert into Customers(CusName, Email, CurrentBalance) values('Rushi Jani', 'rushi@gmail.com', 14500);
+insert into Customers(CusName, Email, CurrentBalance) values('Parth Gor', 'parth@gmail.com', 15000);
+insert into Customers(CusName, Email, CurrentBalance) values('Drashti Bhavsar', 'drashti@gmail.com', 16000);
+insert into Customers(CusName, Email, CurrentBalance) values('Nida Mirza', 'nida@gmail.com', 12000);
+insert into Customers(CusName, Email, CurrentBalance) values('Bhavin Shah', 'bhavin@gmail.com', 12550);
+
+create table TransactionDetails
+(
+	TransId int PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	SenderId int,
+	ReceiverId int,
+	TransDate timestamp,
+	TransAmount int,
+	CONSTRAINT FOREIGN KEY FK_SenderId(SenderId) REFERENCES Customers(CusId),
+	CONSTRAINT FOREIGN KEY FK_ReceiverId(ReceiverId) REFERENCES Customers(CusId)
+);
+
+================================================================================
+select date_format(current_timestamp(), '%d-%b-%Y %r') 
+
+select TransId, a.cusname as sender , b.cusname  as receiver, TransDate, TransAmount
+from  transactiondetails
+inner join customers a  on  a.cusid = transactiondetails.senderid 
+inner join customers b  on  b.cusid = transactiondetails.receiverid
+order by TransDate desc
+
+$arr['data']=DB::table('Transactiondetails')
+                    ->join('Customers as a','a.CusId','=','Transactiondetails.SenderId')
+                    ->join('Customers as b','b.CusId','=','Transactiondetails.ReceiverId')
+                    ->select('TransId','a.CusName as Sender','b.CusName as Receiver','TransDate','TransAmount')
+                    ->orderBy('TransDate','desc')
+                    ->get();
+
